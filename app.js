@@ -145,7 +145,20 @@ async function createRoom() {
     nickname = safeName($("nickname").value);
     isHost = true;
     setStatus("部屋を準備しています…");
-    peer = new Peer();
+    // PeerJS Cloudの接続先を明示し、ログを有効にして原因を追いやすくする
+    peer = new Peer(undefined, {
+      host: "0.peerjs.com",
+      port: 443,
+      path: "/",
+      secure: true,
+      debug: 2,
+      config: {
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" }
+        ]
+      }
+    });
     peer.on("open", id => {
       roomCode = id;
       people.clear();
@@ -155,7 +168,8 @@ async function createRoom() {
     });
     peer.on("connection", setupHostConnection);
     peer.on("error", err => {
-      setStatus("接続エラー：" + peerError(err));
+      console.error("PeerJS create error:", err);
+      setStatus("接続エラー：" + peerError(err) + "（" + err.type + "）");
       $("createBtn").disabled = false;
     });
     peer.on("disconnected", () => setStatus("通信サーバーとの接続が切れました。", "roomStatus"));
@@ -181,7 +195,19 @@ async function joinRoom() {
     if (!roomCode || roomCode.length < 5) throw new Error("部屋コードを正しく入力してください。");
     isHost = false;
     setStatus("部屋に接続しています…");
-    peer = new Peer();
+    peer = new Peer(undefined, {
+      host: "0.peerjs.com",
+      port: 443,
+      path: "/",
+      secure: true,
+      debug: 2,
+      config: {
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" }
+        ]
+      }
+    });
     peer.on("open", () => {
       const conn = peer.connect(roomCode, {reliable: true, serialization: "json"});
       setupGuestConnection(conn);
@@ -193,7 +219,8 @@ async function joinRoom() {
       });
     });
     peer.on("error", err => {
-      setStatus(peerError(err));
+      console.error("PeerJS join error:", err);
+      setStatus(peerError(err) + "（" + err.type + "）");
       $("joinBtn").disabled = false;
     });
   } catch (e) {
