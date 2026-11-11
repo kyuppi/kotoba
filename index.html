@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>ことばルーム</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <div class="logo">ことば<span>ルーム</span></div>
+      <p>入力した文字が、同じ部屋の人にリアルタイムで届く</p>
+    </header>
+
+    <section id="home" class="panel">
+      <h1>会話をはじめよう</h1>
+      <label for="nickname">ニックネーム</label>
+      <input id="nickname" maxlength="20" placeholder="例：たろう" autocomplete="nickname">
+      <button id="createBtn" class="primary full">新しい部屋を作る</button>
+      <div class="separator"><span>または</span></div>
+      <label for="roomCode">部屋コード</label>
+      <input id="roomCode" placeholder="部屋を作った人から教えてもらう" autocomplete="off">
+      <button id="joinBtn" class="full">部屋に参加する</button>
+      <p class="hint">部屋を作った人がオンラインの間だけ利用できます。部屋コードは参加する人にだけ共有してください。</p>
+      <p id="homeStatus" class="status" role="status"></p>
+    </section>
+
+    <section id="room" class="panel hidden">
+      <div class="room-head">
+        <div><p class="eyebrow">ROOM CODE</p><h2 id="roomTitle">---</h2></div>
+        <button id="copyCodeBtn" class="subtle">コードをコピー</button>
+      </div>
+      <div class="notice">入力中の文字が、ほかの参加者の画面にリアルタイムで表示されます。</div>
+      <div class="members">
+        <h3>参加者 <span id="memberCount">1</span></h3>
+        <div id="membersList" class="member-list"></div>
+      </div>
+      <div class="composer">
+        <label for="liveInput">あなたの入力</label>
+        <textarea id="liveInput" rows="4" maxlength="500" placeholder="ここに文字を入力してください…"></textarea>
+        <div class="compose-bottom"><span id="charCount">0 / 500</span><button id="clearBtn" class="subtle">消去</button></div>
+      </div>
+      <div class="live-area">
+        <h3>ほかの人の入力</h3>
+        <div id="liveFeed" class="live-feed"><p class="empty">ほかの人が入力すると、ここに表示されます。</p></div>
+      </div>
+      <button id="leaveBtn" class="leave full">退出する</button>
+      <p id="roomStatus" class="status" role="status"></p>
+    </section>
+    <footer>文字会話専用・音声通話ではありません。個人情報やパスワードは入力しないでください。</footer>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
